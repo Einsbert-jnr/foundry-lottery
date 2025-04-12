@@ -152,7 +152,8 @@ contract Raffle is VRFConsumerBaseV2Plus {
             )
         });
 
-            uint256 requestId = s_vrfCoordinator.requestRandomWords(request);
+            // uint256 requestId = 
+            s_vrfCoordinator.requestRandomWords(request);
 
     }
     
@@ -193,5 +194,8 @@ contract Raffle is VRFConsumerBaseV2Plus {
     function getRaffleState() external view returns(RaffleState){
         return s_raffleState;
     }
-    
+
+    function getPlayers(uint256 index) external view returns (address){
+        return s_players[index];
+    } 
 }
