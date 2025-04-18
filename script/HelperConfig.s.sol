@@ -15,8 +15,8 @@ abstract contract CodeConstants {
     int256 public MOCK_WEI_PER_UINT_LINK = 1e15;
 
 
-   uint256 public constant ETH_SEPOLIA_CHAIN_ID = 11155111;
-   uint256 public constant LOCAL_CHAIN_ID = 31337;
+    uint256 public constant ETH_SEPOLIA_CHAIN_ID = 11155111;
+    uint256 public constant LOCAL_CHAIN_ID = 31337;
 }
 
 contract HelperConfig is CodeConstants, Script {
