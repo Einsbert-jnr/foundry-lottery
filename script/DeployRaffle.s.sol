@@ -5,14 +5,16 @@ import {Script} from "forge-std/Script.sol";
 import {Raffle} from "../src/Raffle.sol";
 import {HelperConfig} from "../script/HelperConfig.s.sol";
 import {HelperConfig} from "../script/HelperConfig.s.sol";
-import {CreateSubscription} from "./Interactions.s.sol";
+import {CreateSubscription, FundSubscription, AddConsumer} from "./Interactions.s.sol";
 
 
 
 contract DeployRaffle is Script{
-    function run() public {}
+    function run() external returns (Raffle raffle, HelperConfig helperConfig){
+        (raffle, helperConfig) = deployContract();
+    }
 
-    function deployContract() public returns (Raffle, HelperConfig){
+    function deployContract() internal returns (Raffle, HelperConfig){
         HelperConfig helperConfig = new HelperConfig();
 
         // local -> deploy mocks, get local config
@@ -26,6 +28,10 @@ contract DeployRaffle is Script{
 
             (config.subscriptionId, config.vrfCoordinator) = createSubscription.createSubscription(config.vrfCoordinator);
 
+            // fund subscription
+            FundSubscription fundSubscription = new FundSubscription();
+            fundSubscription.fundSubscription(config.vrfCoordinator, config.subscriptionId, config.link);
+
         }
 
         vm.startBroadcast();
@@ -38,6 +44,10 @@ contract DeployRaffle is Script{
             config.callbackGasLimit
         );
         vm.stopBroadcast();
+
+        AddConsumer addConsumer = new AddConsumer();
+        // don't need to broadcast here...
+        addConsumer.addConsumer(address(raffle), config.vrfCoordinator, config.subscriptionId);
 
         return (raffle, helperConfig);
     }
